@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>In-Flight Passenger Services</title>
+    <style>
+        :root {
+            --primary-navy: #002D62;
+            --sky-blue: #E3F2FD;
+            --cloud-white: #FFFFFF;
+            --text-main: #333333;
+            --text-muted: #666666;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--sky-blue);
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Header Styling */
+        header {
+            background-color: var(--primary-navy);
+            color: var(--cloud-white);
+            padding: 40px 20px 60px;
+            text-align: center;
+            border-bottom-left-radius: 30px;
+            border-bottom-right-radius: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .flight-icon {
+            width: 48px;
+            height: 48px;
+            margin-bottom: 10px;
+            fill: var(--cloud-white);
+        }
+
+        h1 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        p.subtitle {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        /* Main Content & Navigation Cards */
+        main {
+            flex: 1;
+            padding: 0 20px;
+            margin-top: -30px; /* Pulls cards up over the header */
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            max-width: 500px;
+            width: 100%;
+            align-self: center;
+        }
+
+        .nav-card {
+            background-color: var(--cloud-white);
+            border-radius: 16px;
+            padding: 24px 20px;
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: var(--text-main);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .nav-card:active {
+            transform: scale(0.98);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .card-icon {
+            background-color: var(--sky-blue);
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 16px;
+            flex-shrink: 0;
+        }
+
+        .card-icon svg {
+            width: 24px;
+            height: 24px;
+            fill: var(--primary-navy);
+        }
+
+        .card-content h2 {
+            font-size: 18px;
+            margin-bottom: 4px;
+        }
+
+        .card-content p {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .chevron {
+            margin-left: auto;
+            fill: #CCCCCC;
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 30px 20px;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <!-- Airplane Icon -->
+        <svg class="flight-icon" viewBox="0 0 24 24">
+            <path d="M21,16V14L13,9V3.5A1.5,1.5 0 0,0 11.5,2A1.5,1.5 0 0,0 10,3.5V9L2,14V16L10,13.5V19L8,20.5V22L11.5,21L15,22V20.5L13,19V13.5L21,16Z" />
+        </svg>
+        <h1>Welcome Aboard</h1>
+        <p class="subtitle">Connect to complimentary Wi-Fi to explore our in-flight services.</p>
+    </header>
+
+    <main>
+        <!-- Food Service Card -->
+        <a href="#food-service" class="nav-card">
+            <div class="card-icon">
+                <svg viewBox="0 0 24 24">
+                    <path d="M11,9H9V2H7V9H5V2H3V9C3,11.12 4.66,12.84 6.75,12.97V22H9.25V12.97C11.34,12.84 13,11.12 13,9V2H11V9M16,6V14H18.5V22H21V2C18.24,2 16,4.24 16,6Z" />
+                </svg>
+            </div>
+            <div class="card-content">
+                <h2>In-Flight Dining</h2>
+                <p>Browse menus and order refreshments</p>
+            </div>
+            <svg class="chevron" viewBox="0 0 24 24"><path d="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z" /></svg>
+        </a>
+
+        <!-- Safety Instructions Card -->
+        <a href="#safety" class="nav-card">
+            <div class="card-icon">
+                <svg viewBox="0 0 24 24">
+                    <path d="M12,1L3,5V11C3,16.55 6.84,21.74 12,23C17.16,21.74 21,16.55 21,11V5L12,1M12,11.99H19C18.47,15.77 15.68,19.23 12,20.94V12H5V6.3L12,3.19V11.99Z" />
+                </svg>
+            </div>
+            <div class="card-content">
+                <h2>Safety Information</h2>
+                <p>Review digital safety cards and procedures</p>
+            </div>
+            <svg class="chevron" viewBox="0 0 24 24"><path d="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z" /></svg>
+        </a>
+
+        <!-- Rate Experience Card -->
+        <a href="#feedback" class="nav-card">
+            <div class="card-icon">
+                <svg viewBox="0 0 24 24">
+                    <path d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z" />
+                </svg>
+            </div>
+            <div class="card-content">
+                <h2>Rate Your Experience</h2>
+                <p>Share feedback with our cabin crew</p>
+            </div>
+            <svg class="chevron" viewBox="0 0 24 24"><path d="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z" /></svg>
+        </a>
+    </main>
+
+    <footer>
+        <p>Sit back, relax, and enjoy your flight.</p>
+    </footer>
+
+</body>
+</html>
