@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Safety Information | A&P Airlines</title>
+    <style>
+        :root {
+            --primary-purple: #4A148C; 
+            --light-purple: #E1BEE7; 
+            --cloud-white: #FFFFFF;
+            --text-main: #333333;
+            --text-muted: #666666;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--light-purple);
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Nav Header */
+        nav {
+            background-color: var(--primary-purple);
+            color: var(--cloud-white);
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .back-button {
+            display: flex;
+            align-items: center;
+            color: var(--cloud-white);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 16px;
+        }
+
+        .back-button svg {
+            fill: var(--cloud-white);
+            width: 24px;
+            height: 24px;
+            margin-right: 8px;
+        }
+
+        .page-title {
+            margin-left: auto;
+            margin-right: auto;
+            font-size: 18px;
+            font-weight: 600;
+            padding-right: 32px; /* Offsets the back button to keep text centered */
+        }
+
+        main {
+            flex: 1;
+            padding: 20px;
+            max-width: 600px;
+            width: 100%;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* Video Placeholder */
+        .video-container {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            background-color: #1a1a1a;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .video-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.6;
+        }
+
+        .play-button {
+            position: absolute;
+            width: 64px;
+            height: 64px;
+            background-color: rgba(74, 20, 140, 0.8); /* Purple tint */
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .play-button:hover {
+            transform: scale(1.1);
+        }
+
+        .play-button svg {
+            fill: var(--cloud-white);
+            width: 32px;
+            height: 32px;
+            margin-left: 4px; /* Optical centering for play triangle */
+        }
+
+        /* Content Cards */
+        .info-card {
+            background-color: var(--cloud-white);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .info-card h3 {
+            color: var(--primary-purple);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            font-size: 18px;
+        }
+
+        .info-card h3 svg {
+            width: 20px;
+            height: 20px;
+            fill: var(--primary-purple);
+            margin-right: 8px;
+        }
+
+        .info-card p {
+            color: var(--text-muted);
+            font-size: 14px;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <!-- Back to index.html -->
+        <a href="index.html" class="back-button">
+            <svg viewBox="0 0 24 24">
+                <path d="M20,11V13H8L13.5,18.5L12.08,19.92L4.16,12L12.08,4.08L13.5,5.5L8,11H20Z" />
+            </svg>
+            Back
+        </a>
+        <div class="page-title">Safety Information</div>
+    </nav>
+
+    <main>
+        <!-- Responsive 16:9 Video Placeholder -->
+        <div class="video-container">
+            <!-- Optional: Replace src with a thumbnail image -->
+            <div class="play-button">
+                <svg viewBox="0 0 24 24">
+                    <path d="M8,5.14V19.14L19,12.14L8,5.14Z" />
+                </svg>
+            </div>
+        </div>
+
+        <div class="info-card">
+            <h3>
+                <svg viewBox="0 0 24 24">
+                    <path d="M12,2A10,10 0 1,0 22,12A10,10 0 0,0 12,2M15,13H13V15H11V13H9V11H11V9H13V11H15V13Z" />
+                </svg>
+                Safety Briefing
+            </h3>
+            <p>Please take a moment to watch the safety demonstration video above. It covers important information about seatbelts, emergency exits, oxygen masks, and life vests.</p>
+        </div>
+    </main>
+
+</body>
+</html>
