@@ -370,17 +370,13 @@
                     method: 'POST',
                     body: notificationBody,
                     headers: {
-                        'Title': 'New Passenger Feedback 📝',
+                        'Title': 'New Passenger Feedback', // <-- Emoji removed here
                         'Tags': 'speech_balloon,airplane'
                     }
                 });
             } catch (error) {
                 console.error("Failed to send push notification", error);
             }
-            
-            // Show the success modal to the passenger
-            modal.classList.add('active');
-        });
 
         // Navigate back to index.html when user confirms
         confirmReturnBtn.addEventListener('click', () => {
