@@ -348,12 +348,37 @@
                 submitBtn.disabled = false;
             });
         });
-
-        // Handle Form Submission
-        submitBtn.addEventListener('click', () => {
-            // In a real app, you would send 'selectedRating' and the textarea value to a database here.
+        
+        // Handle Form Submission - Now with ntfy.sh integration!
+        submitBtn.addEventListener('click', async () => {
+            const commentsText = document.getElementById('comments').value;
             
-            // Show the success modal
+            // Map the selected rating to a nice emoji for the notification
+            const ratingMap = {
+                'sad': '😞 Negative',
+                'neutral': '😐 Neutral',
+                'happy': '😊 Positive'
+            };
+            
+            const notificationBody = `Rating: ${ratingMap[selectedRating]}\n\nComments: ${commentsText || "No comments provided."}`;
+            
+            // Send Push Notification via ntfy.sh
+            const ntfyTopic = "ap_airlines_seat_alerts_9988"; // CHANGE THIS TO MATCH YOUR TOPIC
+            
+            try {
+                await fetch(`https://ntfy.sh/${ntfyTopic}`, {
+                    method: 'POST',
+                    body: notificationBody,
+                    headers: {
+                        'Title': 'New Passenger Feedback 📝',
+                        'Tags': 'speech_balloon,airplane'
+                    }
+                });
+            } catch (error) {
+                console.error("Failed to send push notification", error);
+            }
+            
+            // Show the success modal to the passenger
             modal.classList.add('active');
         });
 
