@@ -327,7 +327,7 @@
         </div>
     </div>
 
-    <script>
+<script>
         const emojiBtns = document.querySelectorAll('.emoji-btn');
         const submitBtn = document.getElementById('submitFeedbackBtn');
         const modal = document.getElementById('feedbackModal');
@@ -371,13 +371,18 @@
                     method: 'POST',
                     body: notificationBody,
                     headers: {
-                        'Title': 'New Passenger Feedback', // <-- Emoji removed here
+                        'Title': 'New Passenger Feedback', 
                         'Tags': 'speech_balloon,airplane'
                     }
                 });
             } catch (error) {
                 console.error("Failed to send push notification", error);
             }
+            
+            // Show the success modal to the passenger (This was missing!)
+            modal.classList.add('active');
+            
+        }); // <-- THIS CLOSING BRACKET WAS MISSING!
 
         // Navigate back to index.html when user confirms
         confirmReturnBtn.addEventListener('click', () => {
