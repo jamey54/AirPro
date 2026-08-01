@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>In-Flight Dining | A&P Airlines</title>
+    <style>
+        :root {
+            --primary-purple: #4A148C; 
+            --light-purple: #E1BEE7; 
+            --cloud-white: #FFFFFF;
+            --text-main: #333333;
+            --text-muted: #666666;
+            --accent-purple: #7B1FA2;
+            --button-disabled: #cccccc;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--light-purple);
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            padding-bottom: 40px;
+        }
+
+        /* Nav Header */
+        nav {
+            background-color: var(--primary-purple);
+            color: var(--cloud-white);
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .back-button {
+            display: flex;
+            align-items: center;
+            color: var(--cloud-white);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 16px;
+        }
+
+        .back-button svg {
+            fill: var(--cloud-white);
+            width: 24px;
+            height: 24px;
+            margin-right: 8px;
+        }
+
+        .page-title {
+            margin-left: auto;
+            margin-right: auto;
+            font-size: 18px;
+            font-weight: 600;
+            padding-right: 32px;
+        }
+
+        main {
+            flex: 1;
+            padding: 20px;
+            max-width: 600px;
+            width: 100%;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        /* Menu Items */
+        .menu-item {
+            background-color: var(--cloud-white);
+            border-radius: 16px;
+            padding: 12px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        .item-image {
+            width: 70px;
+            height: 70px;
+            border-radius: 12px;
+            object-fit: contain; /* Better for transparent background PNGs */
+            background-color: var(--light-purple); /* Subtle background behind transparent items */
+            margin-right: 16px;
+            flex-shrink: 0;
+            padding: 4px;
+        }
+
+        .item-details {
+            flex: 1;
+        }
+
+        .item-details h3 {
+            font-size: 16px;
+            color: var(--primary-purple);
+            margin-bottom: 4px;
+        }
+
+        /* Quantity Controls */
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-left: 10px;
+        }
+
+        .qty-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: none;
+            background-color: var(--light-purple);
+            color: var(--primary-purple);
+            font-size: 20px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .qty-btn:active {
+            transform: scale(0.9);
+        }
+
+        .qty-btn:disabled {
+            background-color: var(--button-disabled);
+            color: #ffffff;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .qty-display {
+            font-size: 16px;
+            font-weight: 600;
+            width: 16px;
+            text-align: center;
+        }
+
+        /* Cook Image Section */
+        .cook-section {
+            text-align: center;
+            margin-top: 30px;
+            margin-bottom: 20px;
+        }
+
+        .cook-image {
+            width: 150px;
+            height: auto;
+            max-width: 100%;
+        }
+
+        /* Submit Button */
+        .submit-btn {
+            background-color: var(--primary-purple);
+            color: var(--cloud-white);
+            border: none;
+            border-radius: 25px;
+            padding: 16px;
+            font-size: 18px;
+            font-weight: 600;
+            width: 100%;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(74, 20, 140, 0.3);
+            transition: transform 0.2s, background-color 0.2s;
+        }
+
+        .submit-btn:active {
+            transform: scale(0.98);
+            background-color: var(--accent-purple);
+        }
+
+        .submit-btn:disabled {
+            background-color: var(--button-disabled);
+            box-shadow: none;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Styled Confirmation Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-card {
+            background: var(--cloud-white);
+            border-radius: 24px;
+            padding: 30px 20px;
+            width: 90%;
+            max-width: 360px;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            transform: translateY(30px);
+            transition: transform 0.3s ease;
+        }
+
+        .modal-overlay.active .modal-card {
+            transform: translateY(0);
+        }
+
+        .modal-icon {
+            width: 70px;
+            height: 70px;
+            background: var(--light-purple);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+        }
+
+        .modal-icon svg {
+            width: 40px;
+            height: 40px;
+            fill: var(--primary-purple);
+        }
+
+        .modal-title {
+            color: var(--primary-purple);
+            font-size: 22px;
+            margin-bottom: 12px;
+        }
+
+        .modal-summary {
+            background-color: #f3e5f5;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .modal-summary h4 {
+            color: var(--text-main);
+            margin-bottom: 8px;
+            font-size: 15px;
+        }
+
+        .modal-summary ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .modal-summary li {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .modal-summary .qty-badge {
+            font-weight: bold;
+            color: var(--primary-purple);
+        }
+
+        .confirm-btn {
+            background-color: var(--primary-purple);
+            color: white;
+            border: none;
+            padding: 14px 24px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: 600;
+            width: 100%;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .confirm-btn:active {
+            transform: scale(0.95);
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a href="index.html" class="back-button">
+            <svg viewBox="0 0 24 24">
+                <path d="M20,11V13H8L13.5,18.5L12.08,19.92L4.16,12L12.08,4.08L13.5,5.5L8,11H20Z" />
+            </svg>
+            Back
+        </a>
+        <div class="page-title">In-Flight Dining</div>
+    </nav>
+
+    <main id="menu-container">
+        <!-- Menu Items will be injected here by JavaScript -->
+    </main>
+
+    <main>
+        <!-- Cook Image loaded from img folder -->
+        <div class="cook-section">
+            <img src="cook.png" alt="Our friendly chef" class="cook-image">
+        </div>
+
+        <!-- Submit Button -->
+        <button id="submitOrderBtn" class="submit-btn" disabled>Submit Order</button>
+    </main>
+
+    <!-- Custom Confirmation Modal -->
+    <div id="orderModal" class="modal-overlay">
+        <div class="modal-card">
+            <div class="modal-icon">
+                <!-- Checkmark Icon -->
+                <svg viewBox="0 0 24 24">
+                    <path d="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M11,16.5L18,9.5L16.59,8.09L11,13.67L7.91,10.59L6.5,12L11,16.5Z" />
+                </svg>
+            </div>
+            <h2 class="modal-title">Order Received!</h2>
+            <div class="modal-summary">
+                <h4>Preparing for your seat:</h4>
+                <ul id="orderSummaryList">
+                    <!-- Order items injected here -->
+                </ul>
+            </div>
+            <p style="font-size: 14px; color: var(--text-muted); margin-bottom: 20px;">The cabin crew will deliver your meal shortly.</p>
+            <button id="confirmReturnBtn" class="confirm-btn">Return to Home</button>
+        </div>
+    </div>
+
+    <script>
+        // Updated Menu Data with the new images
+        const menuItems = [
+            { id: 'porridge', name: 'Porridge', image: 'porridge.png' },
+            { id: 'eggs', name: 'Scrambled eggs', image: 'egg.png' },
+            { id: 'ptitim', name: 'Schnitzel & Ptitim', image: 'ptitim.png' },
+            { id: 'haloumi', name: 'Haloumi cheese', image: 'haloumi.png' },
+            { id: 'kinder', name: 'Kinder chocolate fingers', image: 'kinder.png' },
+            { id: 'orange', name: 'Orange Juice', image: 'orange.png' },
+            { id: 'sparkling', name: 'Sparkling Water', image: 'sparkling.png' },
+            { id: 'water', name: 'Mineral Water', image: 'water.png' }
+        ];
+
+        const orderState = {};
+        menuItems.forEach(item => orderState[item.id] = 0);
+
+        const menuContainer = document.getElementById('menu-container');
+        const submitBtn = document.getElementById('submitOrderBtn');
+        const modal = document.getElementById('orderModal');
+        const orderSummaryList = document.getElementById('orderSummaryList');
+        const confirmReturnBtn = document.getElementById('confirmReturnBtn');
+
+        // Render the menu
+        function renderMenu() {
+            menuItems.forEach(item => {
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'menu-item';
+                
+                // SVG fallback included in case image path is wrong
+                itemDiv.innerHTML = `
+                    <img src="${item.image}" alt="${item.name}" class="item-image" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\\'http://www.w3.org/2000/svg\\' fill=\\'%23cccccc\\' viewBox=\\'0 0 24 24\\'><path d=\\'M21,16L14,7L10,12L7,8L3,14H21M21,3A2,2 0 0,1 23,5V19A2,2 0 0,1 21,21H3A2,2 0 0,1 1,19V5A2,2 0 0,1 3,3H21M21,19V5H3V19H21Z\\'/></svg>'">
+                    <div class="item-details">
+                        <h3>${item.name}</h3>
+                    </div>
+                    <div class="quantity-controls">
+                        <button class="qty-btn minus-btn" data-id="${item.id}" disabled>-</button>
+                        <span class="qty-display" id="qty-${item.id}">0</span>
+                        <button class="qty-btn plus-btn" data-id="${item.id}">+</button>
+                    </div>
+                `;
+                menuContainer.appendChild(itemDiv);
+            });
+
+            attachEventListeners();
+        }
+
+        function attachEventListeners() {
+            document.querySelectorAll('.plus-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => updateQuantity(e.target.dataset.id, 1));
+            });
+
+            document.querySelectorAll('.minus-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => updateQuantity(e.target.dataset.id, -1));
+            });
+        }
+
+        function updateQuantity(id, change) {
+            const newQty = orderState[id] + change;
+            if (newQty >= 0 && newQty <= 3) {
+                orderState[id] = newQty;
+                document.getElementById(`qty-${id}`).innerText = orderState[id];
+                
+                document.querySelector(`.minus-btn[data-id="${id}"]`).disabled = orderState[id] === 0;
+                document.querySelector(`.plus-btn[data-id="${id}"]`).disabled = orderState[id] === 3;
+            }
+            checkOrderTotal();
+        }
+
+        function checkOrderTotal() {
+            const totalItems = Object.values(orderState).reduce((sum, qty) => sum + qty, 0);
+            submitBtn.disabled = totalItems === 0;
+        }
+
+        // Handle Form Submission - Opens Modal instead of Alert
+        submitBtn.addEventListener('click', () => {
+            orderSummaryList.innerHTML = ''; // Clear previous list
+            
+            menuItems.forEach(item => {
+                if (orderState[item.id] > 0) {
+                    const li = document.createElement('li');
+                    li.innerHTML = `<span>${item.name}</span> <span class="qty-badge">x${orderState[item.id]}</span>`;
+                    orderSummaryList.appendChild(li);
+                }
+            });
+
+            // Show modal
+            modal.classList.add('active');
+        });
+
+        // Navigate back to index.html when user clicks "Return to Home"
+        confirmReturnBtn.addEventListener('click', () => {
+            window.location.href = 'index.html';
+        });
+
+        // Initialize the app
+        renderMenu();
+    </script>
+</body>
+</html>
