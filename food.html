@@ -423,20 +423,42 @@
             const totalItems = Object.values(orderState).reduce((sum, qty) => sum + qty, 0);
             submitBtn.disabled = totalItems === 0;
         }
-
-        // Handle Form Submission - Opens Modal instead of Alert
-        submitBtn.addEventListener('click', () => {
+        
+        // Handle Form Submission - Now with ntfy.sh integration!
+        submitBtn.addEventListener('click', async () => {
             orderSummaryList.innerHTML = ''; // Clear previous list
+            
+            let pushNotificationText = ""; // Text for the ntfy alert
             
             menuItems.forEach(item => {
                 if (orderState[item.id] > 0) {
+                    // Update UI Modal
                     const li = document.createElement('li');
                     li.innerHTML = `<span>${item.name}</span> <span class="qty-badge">x${orderState[item.id]}</span>`;
                     orderSummaryList.appendChild(li);
+                    
+                    // Build push notification text
+                    pushNotificationText += `- ${orderState[item.id]}x ${item.name}\n`;
                 }
             });
 
-            // Show modal
+            // Send Push Notification via ntfy.sh
+            const ntfyTopic = "ap_airlines_seat_alerts_9988"; // CHANGE THIS TO YOUR SECRET TOPIC
+            
+            try {
+                await fetch(`https://ntfy.sh/${ntfyTopic}`, {
+                    method: 'POST',
+                    body: pushNotificationText,
+                    headers: {
+                        'Title': 'New Food Order! 🍽️',
+                        'Tags': 'bell,plate_with_cutlery'
+                    }
+                });
+            } catch (error) {
+                console.error("Failed to send push notification", error);
+            }
+
+            // Show success modal to passenger
             modal.classList.add('active');
         });
 
