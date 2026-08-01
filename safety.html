@@ -59,7 +59,7 @@
             margin-right: auto;
             font-size: 18px;
             font-weight: 600;
-            padding-right: 32px; /* Offsets the back button to keep text centered */
+            padding-right: 32px; /* Offsets back button to keep text centered */
         }
 
         main {
@@ -73,41 +73,57 @@
             gap: 20px;
         }
 
-        /* Video Placeholder */
-        .video-container {
+        /* Responsive 16:9 Video Player */
+        .video-wrapper {
+            position: relative;
             width: 100%;
             aspect-ratio: 16 / 9;
-            background-color: #1a1a1a;
+            background-color: #000000;
             border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-            position: relative;
             overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
 
-        .video-container img {
+        video {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            opacity: 0.6;
+            display: block;
         }
 
-        .play-button {
+        /* Overlay Play Button (Fades out when played) */
+        .play-overlay {
             position: absolute;
-            width: 64px;
-            height: 64px;
-            background-color: rgba(74, 20, 140, 0.8); /* Purple tint */
-            border-radius: 50%;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.3);
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: transform 0.2s;
+            transition: opacity 0.3s ease;
         }
 
-        .play-button:hover {
+        .play-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .play-button {
+            width: 64px;
+            height: 64px;
+            background-color: rgba(74, 20, 140, 0.9);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+
+        .play-overlay:hover .play-button {
             transform: scale(1.1);
         }
 
@@ -115,7 +131,7 @@
             fill: var(--cloud-white);
             width: 32px;
             height: 32px;
-            margin-left: 4px; /* Optical centering for play triangle */
+            margin-left: 4px; /* Optical adjustment for play triangle */
         }
 
         /* Content Cards */
@@ -151,7 +167,6 @@
 <body>
 
     <nav>
-        <!-- Back to index.html -->
         <a href="index.html" class="back-button">
             <svg viewBox="0 0 24 24">
                 <path d="M20,11V13H8L13.5,18.5L12.08,19.92L4.16,12L12.08,4.08L13.5,5.5L8,11H20Z" />
@@ -162,13 +177,20 @@
     </nav>
 
     <main>
-        <!-- Responsive 16:9 Video Placeholder -->
-        <div class="video-container">
-            <!-- Optional: Replace src with a thumbnail image -->
-            <div class="play-button">
-                <svg viewBox="0 0 24 24">
-                    <path d="M8,5.14V19.14L19,12.14L8,5.14Z" />
-                </svg>
+        <!-- Video Player with Thumbnail & Controls -->
+        <div class="video-wrapper">
+            <video id="safetyVideo" poster="safety-video.png" playsinline controls>
+                <source src="safety-video.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            
+            <!-- Custom Play Overlay -->
+            <div id="playOverlay" class="play-overlay">
+                <div class="play-button">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M8,5.14V19.14L19,12.14L8,5.14Z" />
+                    </svg>
+                </div>
             </div>
         </div>
 
@@ -182,6 +204,27 @@
             <p>Please take a moment to watch the safety demonstration video above. It covers important information about seatbelts, emergency exits, oxygen masks, and life vests.</p>
         </div>
     </main>
+
+    <!-- Script to handle custom overlay play behavior -->
+    <script>
+        const video = document.getElementById('safetyVideo');
+        const overlay = document.getElementById('playOverlay');
+
+        // Play video when user clicks the overlay
+        overlay.addEventListener('click', () => {
+            video.play();
+        });
+
+        // Hide overlay when video starts playing
+        video.addEventListener('play', () => {
+            overlay.classList.add('hidden');
+        });
+
+        // Show overlay if video is paused
+        video.addEventListener('pause', () => {
+            overlay.classList.remove('hidden');
+        });
+    </script>
 
 </body>
 </html>
