@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rate Your Experience | A&P Airlines</title>
+    <style>
+        :root {
+            --primary-purple: #4A148C; 
+            --light-purple: #E1BEE7; 
+            --cloud-white: #FFFFFF;
+            --text-main: #333333;
+            --text-muted: #666666;
+            --accent-purple: #7B1FA2;
+            --button-disabled: #cccccc;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--light-purple);
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Nav Header */
+        nav {
+            background-color: var(--primary-purple);
+            color: var(--cloud-white);
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .back-button {
+            display: flex;
+            align-items: center;
+            color: var(--cloud-white);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 16px;
+        }
+
+        .back-button svg {
+            fill: var(--cloud-white);
+            width: 24px;
+            height: 24px;
+            margin-right: 8px;
+        }
+
+        .page-title {
+            margin-left: auto;
+            margin-right: auto;
+            font-size: 18px;
+            font-weight: 600;
+            padding-right: 32px;
+        }
+
+        main {
+            flex: 1;
+            padding: 20px;
+            max-width: 500px;
+            width: 100%;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        /* Feedback Card */
+        .feedback-card {
+            background-color: var(--cloud-white);
+            border-radius: 20px;
+            padding: 30px 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            text-align: center;
+        }
+
+        .feedback-card h2 {
+            color: var(--primary-purple);
+            font-size: 20px;
+            margin-bottom: 8px;
+        }
+
+        .feedback-card p {
+            color: var(--text-muted);
+            font-size: 14px;
+            margin-bottom: 30px;
+        }
+
+        /* Emoji Rating System */
+        .rating-container {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 30px;
+        }
+
+        .emoji-btn {
+            background: none;
+            border: 2px solid transparent;
+            border-radius: 50%;
+            width: 70px;
+            height: 70px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            fill: #b0b0b0; /* Default inactive color */
+        }
+
+        .emoji-btn svg {
+            width: 50px;
+            height: 50px;
+            transition: fill 0.2s ease, transform 0.2s ease;
+        }
+
+        /* Hover & Active States */
+        .emoji-btn:hover {
+            background-color: #f3e5f5;
+        }
+
+        .emoji-btn:hover svg {
+            transform: scale(1.1);
+        }
+
+        /* Selected State */
+        .emoji-btn.selected {
+            border-color: var(--primary-purple);
+            background-color: #f3e5f5;
+        }
+
+        .emoji-btn.selected svg {
+            fill: var(--primary-purple);
+            transform: scale(1.15);
+        }
+
+        /* Comment Textarea */
+        .comment-section {
+            text-align: left;
+        }
+
+        .comment-section label {
+            display: block;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 10px;
+            font-size: 15px;
+        }
+
+        textarea {
+            width: 100%;
+            height: 120px;
+            border-radius: 12px;
+            border: 1px solid #ddd;
+            padding: 16px;
+            font-size: 15px;
+            resize: none;
+            transition: border-color 0.2s;
+            font-family: inherit;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary-purple);
+            box-shadow: 0 0 0 3px rgba(74, 20, 140, 0.1);
+        }
+
+        /* Submit Button */
+        .submit-btn {
+            background-color: var(--primary-purple);
+            color: var(--cloud-white);
+            border: none;
+            border-radius: 25px;
+            padding: 16px;
+            font-size: 18px;
+            font-weight: 600;
+            width: 100%;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(74, 20, 140, 0.3);
+            transition: transform 0.2s, background-color 0.2s;
+            margin-top: 10px;
+        }
+
+        .submit-btn:active {
+            transform: scale(0.98);
+            background-color: var(--accent-purple);
+        }
+
+        .submit-btn:disabled {
+            background-color: var(--button-disabled);
+            box-shadow: none;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Confirmation Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-card {
+            background: var(--cloud-white);
+            border-radius: 24px;
+            padding: 30px 20px;
+            width: 90%;
+            max-width: 360px;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            transform: translateY(30px);
+            transition: transform 0.3s ease;
+        }
+
+        .modal-overlay.active .modal-card {
+            transform: translateY(0);
+        }
+
+        .modal-icon {
+            width: 70px;
+            height: 70px;
+            background: var(--light-purple);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+        }
+
+        .modal-icon svg {
+            width: 40px;
+            height: 40px;
+            fill: var(--primary-purple);
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a href="index.html" class="back-button">
+            <svg viewBox="0 0 24 24">
+                <path d="M20,11V13H8L13.5,18.5L12.08,19.92L4.16,12L12.08,4.08L13.5,5.5L8,11H20Z" />
+            </svg>
+            Back
+        </a>
+        <div class="page-title">Feedback</div>
+    </nav>
+
+    <main>
+        <div class="feedback-card">
+            <h2>How was your flight?</h2>
+            <p>Your feedback helps us improve.</p>
+
+            <!-- Rating Icons -->
+            <div class="rating-container">
+                <!-- Sad -->
+                <button type="button" class="emoji-btn" data-value="sad">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M7,9.5C7,8.67 7.67,8 8.5,8C9.33,8 10,8.67 10,9.5C10,10.33 9.33,11 8.5,11C7.67,11 7,10.33 7,9.5M15.5,11C14.67,11 14,10.33 14,9.5C14,8.67 14.67,8 15.5,8C16.33,8 17,8.67 17,9.5C17,10.33 16.33,11 15.5,11M12,14C14.28,14 16.22,14.89 17.24,16.5L15.95,17.43C15.22,16.27 13.72,15.5 12,15.5C10.28,15.5 8.78,16.27 8.05,17.43L6.76,16.5C7.78,14.89 9.72,14 12,14Z" />
+                    </svg>
+                </button>
+                <!-- Neutral -->
+                <button type="button" class="emoji-btn" data-value="neutral">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M8.5,8C9.33,8 10,8.67 10,9.5C10,10.33 9.33,11 8.5,11C7.67,11 7,10.33 7,9.5C7,8.67 7.67,8 8.5,8M17,9.5C17,10.33 16.33,11 15.5,11C14.67,11 14,10.33 14,9.5C14,8.67 14.67,8 15.5,8C16.33,8 17,8.67 17,9.5M16,16.5H8V15H16V16.5Z" />
+                    </svg>
+                </button>
+                <!-- Happy -->
+                <button type="button" class="emoji-btn" data-value="happy">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M7,9.5C7,8.67 7.67,8 8.5,8C9.33,8 10,8.67 10,9.5C10,10.33 9.33,11 8.5,11C7.67,11 7,10.33 7,9.5M12,18C9.72,18 7.78,16.89 6.76,15.5L8.05,14.57C8.78,15.73 10.28,16.5 12,16.5C13.72,16.5 15.22,15.73 15.95,14.57L17.24,15.5C16.22,16.89 14.28,18 12,18M15.5,11C14.67,11 14,10.33 14,9.5C14,8.67 14.67,8 15.5,8C16.33,8 17,8.67 17,9.5C17,10.33 16.33,11 15.5,11Z" />
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Comments Area -->
+            <div class="comment-section">
+                <label for="comments">Anything else you'd like to share?</label>
+                <textarea id="comments" placeholder="Tell us about your experience with our crew, meals, or flight..."></textarea>
+            </div>
+        </div>
+
+        <button id="submitFeedbackBtn" class="submit-btn" disabled>Submit Feedback</button>
+    </main>
+
+    <!-- Custom Confirmation Modal -->
+    <div id="feedbackModal" class="modal-overlay">
+        <div class="modal-card">
+            <div class="modal-icon">
+                <!-- Heart Icon for Feedback -->
+                <svg viewBox="0 0 24 24">
+                    <path d="M12,21.35L10.55,20.03C5.4,15.36 2,12.28 2,8.5C2,5.42 4.42,3 7.5,3C9.24,3 10.91,3.81 12,5.09C13.09,3.81 14.76,3 16.5,3C19.58,3 22,5.42 22,8.5C22,12.28 18.6,15.36 13.45,20.04L12,21.35Z" />
+                </svg>
+            </div>
+            <h2 style="color: var(--primary-purple); margin-bottom: 12px;">Thank You!</h2>
+            <p style="color: var(--text-muted); margin-bottom: 24px; line-height: 1.5;">Your feedback has been securely submitted to the A&P Airlines crew. We appreciate you taking the time to help us improve.</p>
+            
+            <button id="confirmReturnBtn" class="submit-btn">Return to Menu</button>
+        </div>
+    </div>
+
+    <script>
+        const emojiBtns = document.querySelectorAll('.emoji-btn');
+        const submitBtn = document.getElementById('submitFeedbackBtn');
+        const modal = document.getElementById('feedbackModal');
+        const confirmReturnBtn = document.getElementById('confirmReturnBtn');
+        
+        let selectedRating = null;
+
+        // Handle Emoji Selection
+        emojiBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Remove 'selected' class from all buttons
+                emojiBtns.forEach(b => b.classList.remove('selected'));
+                
+                // Add 'selected' class to clicked button
+                btn.classList.add('selected');
+                
+                // Update state and enable submit
+                selectedRating = btn.getAttribute('data-value');
+                submitBtn.disabled = false;
+            });
+        });
+
+        // Handle Form Submission
+        submitBtn.addEventListener('click', () => {
+            // In a real app, you would send 'selectedRating' and the textarea value to a database here.
+            
+            // Show the success modal
+            modal.classList.add('active');
+        });
+
+        // Navigate back to index.html when user confirms
+        confirmReturnBtn.addEventListener('click', () => {
+            window.location.href = 'index.html';
+        });
+    </script>
+</body>
+</html>
